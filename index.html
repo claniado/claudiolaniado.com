@@ -9,6 +9,14 @@
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <!-- Google Analytics 4: ClaudioLaniado.com (separate from MemoireSnap) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-9795J0YWYH"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-9795J0YWYH');
+  </script>
   <title>Claudio Laniado — Practical help for small businesses</title>
   <style>
     :root{
@@ -322,6 +330,28 @@
 
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
+
+    // A click starts an email draft; it does not prove an inquiry was sent.
+    document.addEventListener('click', function(event) {
+      var link = event.target.closest('a[href]');
+      if (!link || typeof gtag !== 'function') return;
+      var href = link.getAttribute('href') || '';
+      var location = link.closest('footer') ? 'footer' :
+        link.closest('header') ? 'header' :
+        link.closest('#contact') ? 'contact_section' :
+        link.closest('.hero') ? 'hero' : 'content';
+      if (href.startsWith('mailto:claudio@claudiolaniado.com')) {
+        gtag('event', 'contact_click', {
+          contact_method: 'email',
+          contact_purpose: href.includes('Quick-Win') ? 'ai_quick_win_review' : 'general_inquiry',
+          contact_location: location
+        });
+      } else if (href === '#contact') {
+        gtag('event', 'contact_navigation_click', {
+          contact_location: location
+        });
+      }
+    });
   </script>
 </body>
 </html>
